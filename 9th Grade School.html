@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<link rel="canonical" href="https://www.ff-wewerwerwebsite.com/" />
+
+<html lang="en">
+<head>
+  <!-- =========================================================
+       9th Grade Honors Board - Professional Animated Site
+       Single-file HTML/CSS/JS (no external deps)
+       ========================================================= -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>9th Grade Honors Board</title>
+
+  <!-- ======================== FONTS ========================= -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- ========================= CSS ========================== -->
+  <style>
+    :root{
+      --bg-start:#0b1e3a;
+      --bg-end:#1c4a8a;
+      --panel:#ffffff10;
+      --glass:#ffffff1a;
+      --text:#f8fafc;
+      --muted:#c7d2fe;
+      --primary:#3b82f6;
+      --primary-dark:#1d4ed8;
+      --accent:#22d3ee;
+      --ok:#10b981;
+      --shadow:0 16px 40px rgba(0,0,0,.25);
+      --round:24px;
+      --gap:28px;
+      --maxw:1400px; /* wider site */
+    }
+    /* Dark/Light theme toggle */
+    .light{
+      --bg-start:#eef2ff;
+      --bg-end:#e2e8f0;
+      --panel:#00000008;
+      --glass:#0000000d;
+      --text:#0f172a;
+      --muted:#475569;
+      --primary:#2563eb;
+      --primary-dark:#1e40af;
+      --accent:#0891b2;
+      --ok:#059669;
+      --shadow:0 16px 40px rgba(0,0,0,.12);
+    }
+
+    /* Base layout */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1200px 800px at 10% -10%, #0e2a50 0%, transparent 60%),
+                  radial-gradient(1200px 800px at 110% 10%, #123f79 0%, transparent 60%),
+                  linear-gradient(135deg,var(--bg-start),var(--bg-end));
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    /* Container */
+    .wrap{
+      width:100%;
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:24px;
+    }
+
+    /* Header / hero */
+    header{
+      position:sticky; top:0; z-index:50;
+      background:linear-gradient(to bottom, #00000055, #00000000);
+      backdrop-filter: blur(12px);
+    }
+    .hero{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:var(--gap);
+      padding:24px 0 8px;
+    }
+    .title{
+      display:flex; align-items:center; gap:16px;
+    }
+    .badge{
+      background:linear-gradient(90deg,var(--accent),var(--primary));
+      color:#0b1220;
+      font-weight:800;
+      font-size:14px;
+      padding:6px 12px; border-radius:999px;
+      letter-spacing:.5px;
+      box-shadow:var(--shadow);
+    }
+    h1{
+      margin:0;
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight:900;
+      letter-spacing:.5px;
+      text-shadow:0 4px 20px #00000066;
+    }
+    .controls{
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    }
+    .btn{
+      appearance:none; border:none; color:white; cursor:pointer;
+      background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      padding:12px 16px; border-radius:14px; font-weight:700;
+      letter-spacing:.2px; box-shadow:var(--shadow);
+      transform:translateZ(0); transition: transform .18s ease, filter .2s ease, background .2s ease;
+    }
+    .btn:hover{ transform: translateY(-2px) scale(1.02)}
+    .btn.secondary{
+      background:linear-gradient(135deg,#0ea5e9,#0284c7);
+    }
+    .toggle{
+      display:inline-flex; align-items:center; gap:10px; padding:10px 14px;
+      background:var(--glass); border-radius:999px; border:1px solid #ffffff22;
+      user-select:none;
+    }
+    .switch{
+      width:42px; height:24px; background:#00000055; border-radius:999px; padding:3px; position:relative;
+      transition: background .2s ease;
+    }
+    .knob{
+      position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%;
+      background:#fff; box-shadow:0 6px 16px #00000066;
+      transition:left .2s ease, transform .2s ease;
+    }
+    .light .switch{ background:#94a3b8 }
+    .light .knob{ left:21px }
+
+    /* Search + legend bar */
+    .bar{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      margin:16px 0 28px; padding:14px; border-radius:var(--round);
+      background:linear-gradient(180deg, #ffffff1a, #ffffff08);
+      border:1px solid #ffffff25; box-shadow:var(--shadow);
+    }
+    .search{
+      flex:1; min-width:240px; display:flex; gap:10px; align-items:center;
+      background:#00000033; border-radius:14px; padding:10px 12px; border:1px solid #ffffff25;
+    }
+    .search input{
+      flex:1; background:transparent; border:0; color:var(--text); font-size:16px; outline:0;
+    }
+    .legend{ display:flex; align-items:center; gap:8px; flex-wrap:wrap }
+    .dot{ width:12px; height:12px; border-radius:999px; display:inline-block }
+    .a-day{ background:#34d399}
+    .b-day{ background:#f59e0b}
+
+    /* Panels (left / center / right) */
+    .grid-main{
+      display:grid; grid-template-columns: 1.05fr 2.2fr 1.05fr; gap:var(--gap);
+      align-items:stretch;
+    }
+    .panel{
+      background:linear-gradient(180deg, var(--panel), transparent);
+      border:1px solid #ffffff20;
+      border-radius:var(--round);
+      box-shadow:var(--shadow);
+      padding:22px;
+      min-height:340px;
+      overflow:hidden;
+      position:relative;
+    }
+    .panel h3{
+      margin:0 0 12px; font-weight:800; letter-spacing:.4px; font-size:20px
+    }
+    .panel .sub{ opacity:.85; font-size:14px }
+
+    /* Left image / Right school info */
+    .cover{
+      height:100%; border-radius:16px; overflow:hidden; position:relative;
+      background:linear-gradient(180deg,#00000044,#00000088);
+    }
+    .cover img{
+      position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(1.1);
+      transform:scale(1.04); transition: transform 1s ease;
+    }
+    .cover:hover img{ transform: scale(1.08) }
+    .cover .label{
+      position:absolute; bottom:12px; left:12px; right:12px;
+      background:#00000066; border:1px solid #ffffff2a; border-radius:12px; padding:10px 12px;
+      font-weight:700; letter-spacing:.2px; backdrop-filter: blur(6px);
+    }
+
+    .school{
+      display:flex; flex-direction:column; height:100%; gap:12px;
+    }
+    .school .logo{
+      width:96px; height:96px; border-radius:50%; border:2px solid #ffffff55; box-shadow:var(--shadow);
+      background: radial-gradient(#ffffffbb,#ffffff22);
+      display:grid; place-items:center; font-weight:900; color:#0b1e3a;
+    }
+    .school .card{
+      background:linear-gradient(180deg, #ffffff26, #ffffff10);
+      border:1px solid #ffffff25; border-radius:16px; padding:14px; line-height:1.6;
+    }
+
+    /* Class buttons area */
+    .classes{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr)); /* WIDER + spaced */
+      gap:36px; /* more spacing */
+      padding:10px;
+    }
+    .class-btn{
+      position:relative;
+      display:flex; align-items:center; justify-content:center; text-align:center;
+      padding:26px 20px;
+      border-radius:28px; /* bubbly */
+      color:#fff; font-weight:900; letter-spacing:.3px; font-size:22px;
+      background:
+        radial-gradient(60% 100% at 50% 0%, #ffffff22, #ffffff00 60%),
+        linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 14px 32px rgba(30,64,175,.45);
+      border:1px solid #ffffff33;
+      transform: translateZ(0);
+      transition: transform .18s ease, box-shadow .25s ease, filter .2s ease;
+      cursor:pointer;
+      min-height:96px;
+    }
+    .class-btn:hover{
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 20px 44px rgba(30,64,175,.55);
+      filter: saturate(1.06);
+    }
+    /* Tooltip showing A/B Day */
+    .class-btn::after{
+      content: attr(data-day);
+      position:absolute; bottom:-12px; right:16px;
+      background:#000000c9; color:#fff; font-weight:800; font-size:12px;
+      padding:6px 10px; border-radius:10px; border:1px solid #ffffff3a;
+      opacity:0; transform: translateY(6px); transition: opacity .2s ease, transform .2s ease;
+      pointer-events:none;
+    }
+    .class-btn:hover::after{ opacity:1; transform:translateY(0) }
+
+    /* Info sections below */
+    section{
+      margin-top:42px;
+      background:linear-gradient(180deg, var(--panel), transparent);
+      border:1px solid #ffffff25; border-radius:var(--round);
+      box-shadow:var(--shadow);
+      padding:28px;
+    }
+    section h2{
+      margin:0 0 16px; font-size:28px; font-weight:900; letter-spacing:.4px;
+    }
+    .two-col{
+      display:grid; grid-template-columns: 1.2fr 1fr; gap:var(--gap);
+    }
+    .info-cards{
+      display:grid; grid-template-columns: repeat(3, 1fr); gap:var(--gap);
+    }
+    .info-card{
+      background:linear-gradient(180deg, #ffffff24, #ffffff12);
+      border:1px solid #ffffff25; border-radius:18px; padding:18px; line-height:1.65;
+      transition: transform .18s ease;
+    }
+    .info-card:hover{ transform: translateY(-4px) }
+
+    /* Announcement list */
+    .ann-grid{
+      display:grid; grid-template-columns: repeat(3, 1fr); gap:var(--gap);
+    }
+    .ann{
+      background:linear-gradient(180deg, #0ea5e933, #0284c71f);
+      border:1px solid #ffffff30; border-radius:16px; padding:16px;
+    }
+    .tag{ display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.4px; }
+    .tag.ok{ background:#10b98133; border:1px solid #10b98188}
+    .tag.warn{ background:#f59e0b33; border:1px solid #f59e0b88}
+    .tag.info{ background:#60a5fa33; border:1px solid #60a5fa88}
+
+    /* Resources grid */
+    .res-grid{
+      display:grid; grid-template-columns: repeat(4, 1fr); gap:var(--gap);
+    }
+    .res{
+      background:linear-gradient(180deg, #ffffff22, #ffffff12);
+      border:1px solid #ffffff22; border-radius:14px; padding:16px; display:flex; gap:10px; align-items:center;
+      transition: transform .18s ease;
+    }
+    .res:hover{ transform: translateY(-4px) }
+    .res .ic{
+      width:40px; height:40px; border-radius:10px; display:grid; place-items:center;
+      background:linear-gradient(135deg, #22d3ee, #3b82f6); font-weight:900; color:#0b1e3a;
+      box-shadow:var(--shadow);
+    }
+
+    /* Schedule table */
+    .table{
+      width:100%; border-collapse:collapse; overflow:hidden; border-radius:14px; border:1px solid #ffffff30;
+      box-shadow:var(--shadow); background:#00000022;
+    }
+    .table th, .table td{
+      padding:14px 12px; border-bottom:1px solid #ffffff22; text-align:left;
+    }
+    .table th{
+      background:#00000044; font-weight:800; letter-spacing:.3px;
+    }
+
+    /* FAQ */
+    .faq{
+      display:grid; gap:12px;
+    }
+    .faq details{
+      background:linear-gradient(180deg, #ffffff22, #ffffff12);
+      border:1px solid #ffffff30; border-radius:12px; padding:12px 14px; transition: transform .18s ease;
+    }
+    .faq details[open]{ transform: translateY(-2px) }
+    .faq summary{ cursor:pointer; font-weight:800 }
+    .faq p{ margin:10px 0 0; line-height:1.7 }
+
+    /* Contact */
+    .form{
+      display:grid; grid-template-columns: 1fr 1fr; gap:var(--gap);
+    }
+    .form .field{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .input, textarea{
+      background:#0000003a; color:var(--text); border:1px solid #ffffff30;
+      border-radius:12px; padding:12px; font-size:15px; outline:none;
+    }
+    textarea{ min-height:120px }
+
+    /* Footer / Class of 2029 banner */
+    footer{
+      margin:42px 0 10px; text-align:center;
+    }
+    .banner{
+      margin-top:16px;
+      background:linear-gradient(90deg, #22d3ee, #3b82f6, #a78bfa);
+      color:#0b1220; font-weight:900; letter-spacing:.8px;
+      padding:14px 18px; border-radius:999px; display:inline-block; box-shadow:var(--shadow);
+    }
+
+    /* Back to top */
+    .to-top{
+      position:fixed; right:18px; bottom:18px; z-index:60;
+      background:linear-gradient(135deg, #10b981, #059669);
+      color:#0b1220; font-weight:900;
+      border:none; border-radius:999px; padding:12px 16px; cursor:pointer; box-shadow:var(--shadow);
+      transform: translateY(120%); transition: transform .25s ease;
+    }
+    .to-top.show{ transform: translateY(0) }
+
+    /* Responsive */
+    @media (max-width:1100px){
+      .grid-main{ grid-template-columns:1fr; }
+      .cover{ min-height:300px }
+      .school{ min-height:300px }
+      .res-grid{ grid-template-columns: repeat(2,1fr) }
+      .ann-grid{ grid-template-columns: repeat(2,1fr) }
+      .info-cards{ grid-template-columns: repeat(2,1fr) }
+      .two-col{ grid-template-columns:1fr }
+      .classes{ grid-template-columns: repeat(2, minmax(220px,1fr)) }
+    }
+    @media (max-width:680px){
+      .classes{ grid-template-columns: 1fr }
+      .controls{ justify-content:flex-start }
+      .wrap{ padding:16px }
+    }
+  </style>
+</head>
+<body>
+  <!-- ======================= HEADER / HERO ======================= -->
+  <header>
+    <div class="wrap hero" aria-label="Header">
+      <div class="title">
+        <span class="badge">OFFICIAL</span>
+        <h1>9th Grade Honors Board</h1>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="filter-all" aria-pressed="true">All Classes</button>
+        <button class="btn secondary" id="filter-a">A Day</button>
+        <button class="btn secondary" id="filter-b">B Day</button>
+
+        <label class="toggle" title="Toggle light/dark theme">
+          <span>Theme</span>
+          <span class="switch"><span class="knob" id="knob"></span></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- =================== SEARCH / LEGEND BAR ===================== -->
+  <div class="wrap bar" role="region" aria-label="Search and legend">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M19 19l-4.35-4.35m1.18-5.3A7.53 7.53 0 1 1 3.5 3.5a7.53 7.53 0 0 1 12.33 5.85Z" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input id="search" type="text" placeholder="Search classes… (e.g., Algebra, Arabic)" aria-label="Search classes" />
+    </div>
+
+    <div class="legend">
+      <span class="dot a-day"></span><span>A Day (Girls Have Lunch first)</span>
+      <span class="dot b-day" style="margin-left:12px"></span><span>B Day (Boys have Lunch first)</span>
+    </div>
+  </div>
+
+  <!-- ===================== MAIN PANELS LAYOUT ==================== -->
+  <div class="wrap grid-main">
+    <!-- Left: Students cover -->
+    <aside class="panel" aria-label="Students of 2029">
+      <div class="cover" role="img" aria-label="Students of 2029">
+        <!-- Replace with your real image path -->
+        <img src="https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=1600&auto=format&fit=crop" alt="Students of 2029 group photo">
+        <div class="label">Students of 2029</div>
+      </div>
+    </aside>
+
+    <!-- Center: Classes grid -->
+    <main class="panel" aria-label="Class selection">
+      <h3>Choose Your Class</h3>
+      <div class="sub">Hover to see day • Click to open class page</div>
+
+      <div class="classes" id="classGrid">
+        <!-- A DAY -->
+        <button class="class-btn" data-day="A Day" data-group="A" data-href="english.html">English Pre-AP 1</button>
+        <button class="class-btn" data-day="A Day" data-group="A" data-href="algebra.html">Algebra 2</button>
+        <button class="class-btn" data-day="A Day" data-group="A" data-href="aphumangeo.html">AP Human Geo</button>
+        <button class="class-btn" data-day="A Day" data-group="A" data-href="islamic.html">Islamic Studies</button>
+        <!-- B DAY -->
+        <button class="class-btn" data-day="B Day" data-group="B" data-href="computers.html">Computers</button>
+        <button class="class-btn" data-day="B Day" data-group="B" data-href="biology.html">Biology</button>
+        <button class="class-btn" data-day="B Day" data-group="B" data-href="seminar.html">Freshmen Seminar</button>
+        <button class="class-btn" data-day="B Day" data-group="B" data-href="arabic.html">Arabic</button>
+      </div>
+    </main>
+
+    <!-- Right: School information -->
+    <aside class="panel school" aria-label="Crescent View Academy">
+      <div class="logo" aria-hidden="true">CVA</div>
+      <div class="card"><strong>Crescent View Academy</strong><br/>Denver, Colorado</div>
+      <div class="card">Mission: Academic excellence, character, and community.</div>
+      <div class="card">Tip: Use the filter buttons to show only A or B day classes.</div>
+    </aside>
+  </div>
+
+  <!-- ===================== INFO: ABOUT / STATS =================== -->
+  <section class="wrap" aria-label="About and stats">
+    <h2>About This Website</h2>
+    <div class="two-col">
+      <div class="info-cards">
+        <div class="info-card"><strong>Purpose</strong><br/>A central, student-friendly hub for 9th Grade Honors classes, notes, and updates.</div>
+        <div class="info-card"><strong>Navigation</strong><br/>Click a class to open its detail page with important notes and tasks.</div>
+        <div class="info-card"><strong>Updates</strong><br/>Developers can revise content anytime to reflect assignments and announcements.</div>
+        <div class="info-card"><strong>Mobile Ready</strong><br/>Fully responsive — works great on phones, tablets, and laptops.</div>
+        <div class="info-card"><strong>Accessibility</strong><br/>Keyboard and screen reader friendly; clear contrast and focus states.</div>
+        <div class="info-card"><strong>Performance</strong><br/>No heavy libraries. Smooth, native animations for a fast experience.</div>
+      </div>
+      <div class="info-card" style="min-height:100%">
+      <h2>Welcome to the 9th Grade Honors Board</h2>
+<p>Stay organized and keep track of your classes and important notes here.</p>
+<ul>
+  <li>Click on a class to view detailed notes and assignments.</li>
+  <li>Hover over a class to see whether it is an A Day or B Day.</li>
+  <li>Check the daily schedule below for all class times, lunch, and Salah.</li>
+  <li>Use this board to plan your day and stay on top of homework.</li>
+  <li>Important announcements and resources are updated regularly—scroll down to see them.</li>
+  <li>Tip: Bookmark this page for quick access to your class notes.</li>
+</ul>
+
+        </ol>
+        <div style="margin-top:10px; font-size:13px; opacity:.9">Pro tip: Press <kbd>/</kbd> to focus the class search quickly.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== ANNOUNCEMENTS ====================== -->
+  <section class="wrap" aria-label="Announcements">
+    <h2>Announcements</h2>
+    <div class="ann-grid">
+      <div class="ann"><span class="tag ok">NEW</span><br/><strong>Welcome back!</strong><br/>Check each class page to find important notes.</div>
+      <div class="ann"><span class="tag info">INFO</span><br/><strong>A/B Day Rotation</strong><br/>A Day: English, Algebra 2, AP Human Geo, Islamic Studies • B Day: Computers, Biology, Seminar, Arabic.</div>
+      <div class="ann"><span class="tag warn">REMINDER</span><br/><strong>ID Badges</strong><br/>Please wear your student ID at all times on campus.</div>
+    </div>
+  </section>
+
+  <!-- ========================= RESOURCES ========================= -->
+
+
+  <!-- ========================= SCHEDULE ========================== -->
+<section class="wrap" aria-label="Daily schedule">
+  <h2>Daily Schedule</h2>
+  <table class="table" aria-describedby="A/B day schedule">
+    <thead>
+      <tr>
+        <th>Period</th>
+        <th>Time</th>
+        <th>A Day</th>
+        <th>B Day</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1st Period</td>
+        <td>8:00 AM - 9:30 AM</td>
+        <td>English Pre-AP 1</td>
+        <td>Computers</td>
+      </tr>
+      <tr>
+        <td>2nd Period</td>
+        <td>9:35 AM - 11:00 AM</td>
+        <td>Algebra 2</td>
+        <td>Biology</td>
+      </tr>
+      <tr>
+        <td>3rd Period</td>
+        <td>11:05 AM - 12:30 PM</td>
+        <td>AP Human Geo</td>
+        <td>Freshmen Seminar</td>
+      </tr>
+      <tr>
+        <td>Lunch & Recess</td>
+        <td>12:35 PM - 1:20 PM</td>
+        <td colspan="2">Lunch & Recess</td>
+      </tr>
+      <tr>
+        <td>Salah</td>
+        <td>1:25 PM - 1:45 PM</td>
+        <td colspan="2">Salah</td>
+      </tr>
+      <tr>
+        <td>4th Period</td>
+        <td>1:50 PM - 3:15 PM</td>
+        <td>Islamic Studies</td>
+        <td>Arabic</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+
+  <!-- =========================== FAQ ============================ -->
+
+
+  <!-- ========================= CONTACT ========================== -->
+
+
+  <!-- ========================== FOOTER ========================== -->
+  <footer class="wrap" aria-label="Footer">
+    <div style="opacity:.9">© 2029 Crescent View Academy — 9th Grade Honors</div>
+    <div class="banner" aria-label="Class of 2029">CLASS OF 2029</div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="to-top" id="toTop" title="Back to top">↑ Top</button>
+
+  <!-- =========================== JS ============================= -->
+  <script>
+    // --------- Theme toggle ---------
+    (function(){
+      const knob = document.getElementById('knob');
+      const root = document.documentElement;
+      let isLight = false;
+      document.querySelector('.toggle').addEventListener('click', ()=>{
+        isLight = !isLight;
+        document.body.classList.toggle('light', isLight);
+      });
+    })();
+
+    // --------- Class click navigation (multi-page ready) ---------
+    document.querySelectorAll('.class-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const href = btn.getAttribute('data-href');
+        if(href){ window.location.href = href; }
+      });
+    });
+
+    // --------- Filters (All / A / B) ---------
+    const filterAll = document.getElementById('filter-all');
+    const filterA   = document.getElementById('filter-a');
+    const filterB   = document.getElementById('filter-b');
+    const buttons   = Array.from(document.querySelectorAll('.class-btn'));
+
+    function applyFilter(group){
+      buttons.forEach(b=>{
+        const g = b.getAttribute('data-group');
+        b.style.display = (group==='ALL' || g===group) ? 'flex':'none';
+      });
+      [filterAll, filterA, filterB].forEach(el=> el.setAttribute('aria-pressed','false'));
+      if(group==='ALL') filterAll.setAttribute('aria-pressed','true');
+      if(group==='A')   filterA.setAttribute('aria-pressed','true');
+      if(group==='B')   filterB.setAttribute('aria-pressed','true');
+    }
+    filterAll.addEventListener('click', ()=>applyFilter('ALL'));
+    filterA.addEventListener('click',   ()=>applyFilter('A'));
+    filterB.addEventListener('click',   ()=>applyFilter('B'));
+
+    // --------- Search ---------
+    const input = document.getElementById('search');
+    input.addEventListener('input', ()=>{
+      const q = input.value.trim().toLowerCase();
+      buttons.forEach(b=>{
+        const text = b.textContent.toLowerCase();
+        b.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    });
+    // Keyboard shortcut to focus search: "/"
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === '/' && document.activeElement !== input){
+        e.preventDefault(); input.focus();
+      }
+    });
+
+    // --------- Back to Top ---------
+    const toTop = document.getElementById('toTop');
+    window.addEventListener('scroll', ()=>{
+      if(window.scrollY > 300){ toTop.classList.add('show'); }
+      else{ toTop.classList.remove('show'); }
+    });
+    toTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+    // --------- Contact form (demo) ---------
+    function handleSubmit(e){
+      e.preventDefault();
+      const status = document.getElementById('status');
+      status.textContent = 'Sending…';
+      setTimeout(()=>{ status.textContent = 'Thanks! Your message was recorded.'; }, 600);
+      e.target.reset();
+      return false;
+    }
+    window.handleSubmit = handleSubmit;
+  </script>
+</body>
+</html>
